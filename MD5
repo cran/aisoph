@@ -1,0 +1,14 @@
+c9b1f8b4c0057f7752e3b390b8298368 *DESCRIPTION
+e5e609bb60c3685454b314c7bd4a8fb0 *NAMESPACE
+a7f5aaca5d3a1183da2ee997df64be9b *R/RcppExports.R
+825f681b56dbf4336375342b2bbfa15d *R/aisoph.R
+273bbd5f728663e1f4ac48c0cd9cecd2 *R/aisoph.ti.R
+ea66d4aaf6d400c6302ca0e2c225bc7d *R/newton.raphson.R
+671a06639bec9ee5426199f703bdf4b6 *R/picm.R
+376014094c21e21c6ebb1edd5a06dd5d *R/plot.aisoph.R
+e1072c98c6e62e3f7d3d0a3e6bb8ddcf *R/print.aisoph.R
+220b8fbbc6d72d202b9832d6667f5428 *man/aisoph-package.Rd
+249a3354c493e7d63763109e8b7ea2fa *man/aisoph.Rd
+8208068b2a48e688212d7974559b5339 *src/BTFft.cpp
+db074d5546fddaa16653407c881a3c86 *src/RcppExports.cpp
+4e5489d393816c5ae7f6b6d84ee0e3a5 *src/Y2ft.cpp

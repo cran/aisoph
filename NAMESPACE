@@ -1,0 +1,12 @@
+useDynLib(aisoph)
+
+importFrom("graphics", "plot", "points", "legend", "par")
+importFrom("survival", "coxph")
+importFrom("Iso", "pava")
+
+export(aisoph, aisoph)
+
+S3method(print, aisoph, print.aisoph)
+S3method(plot, aisoph, plot.aisoph)
+
+importFrom(Rcpp, evalCpp)
