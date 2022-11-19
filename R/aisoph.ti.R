@@ -1,4 +1,4 @@
-aisoph.ti=function(TIME, STATUS, Z1, Z2, W, shape, K1, K2, maxdec, maxiter, eps){
+aisoph.ti=function(TIME, STATUS, Z1, Z2, W, shape1, shape2, K1, K2, maxdec, maxiter, eps){
   #sorted by z
   n=length(STATUS)
   order.z1=order(Z1);             order.z2=order(Z2)  
@@ -20,8 +20,8 @@ aisoph.ti=function(TIME, STATUS, Z1, Z2, W, shape, K1, K2, maxdec, maxiter, eps)
   #counting process
   rank.t1=rank(t1,ties.method='min')
   rank.t2=rank(t2,ties.method='min')
-  Y1=dN1=matrix(,n,n)       #row is the subj, col is the time corresponding z_(i);
-  Y2=dN2=matrix(,n,n)
+  Y1=dN1=matrix(NA,n,n)       #row is the subj, col is the time corresponding z_(i);
+  Y2=dN2=matrix(NA,n,n)
   for(i in 1:n){
     Y1[i,]=rep(0,n)
     Y1[i,][1:rank.t1[i]]=1
@@ -51,29 +51,36 @@ aisoph.ti=function(TIME, STATUS, Z1, Z2, W, shape, K1, K2, maxdec, maxiter, eps)
   if(is.null(W)){ #no trt group
     w1=rep(0,n); w2=rep(0,n)
     beta=0
+    #beta.hat=c(0.01,0.01)
     
     try(beta.hat<-coxph(Surv(TIME,STATUS)~Z1+Z2)$coefficient, silent=T)
-    if(!is.numeric(beta.hat)) beta.hat=c(0.01,0.01)
+    if(!is.numeric(beta.hat)){
+      beta.hat<-glm(STATUS~Z1+Z2)$coefficient[-1] #no intercept to match coxph
+    } 
     
-    if(shape=='increasing'){
-      psi1= abs(beta.hat[1])*(z1.obs-zk1);    psi2= abs(beta.hat[2])*(z2.obs-zk2)
-    }else if(shape=='decreasing'){
-      psi1=-abs(beta.hat[1])*(z1.obs-zk1);    psi2=-abs(beta.hat[2])*(z2.obs-zk2)
-    }
   }else{
     w1=W[order.z1];                 w2=W[order.z2]    
-    
     try(beta.hat<-coxph(Surv(TIME,STATUS)~Z1+Z2+W)$coefficient, silent=T)
-    if(!is.numeric(beta.hat)){; beta.hat=c(0.01,0.01); beta=0;
-    }else{; beta=beta.hat[3]
-    }
-    if(shape=='increasing'){
-      psi1= abs(beta.hat[1])*(z1.obs-zk1);    psi2= abs(beta.hat[2])*(z2.obs-zk2)
-    }else if(shape=='decreasing'){
-      psi1=-abs(beta.hat[1])*(z1.obs-zk1);    psi2=-abs(beta.hat[2])*(z2.obs-zk2)
+    if(!is.numeric(beta.hat)){
+      beta.hat<-glm(STATUS~Z1+Z2+W)$coefficient[-1]
+      #beta.hat=c(0.01,0.01); beta=0;
+    }else{
+      beta=beta.hat[3]
     }
   }
-
+  
+  if(shape1=='increasing'){
+    psi1= abs(beta.hat[1])*(z1.obs-zk1)
+  }else if(shape1=='decreasing'){
+    psi1=-abs(beta.hat[1])*(z1.obs-zk1)
+  }
+  
+  if(shape2=='increasing'){
+    psi2= abs(beta.hat[2])*(z2.obs-zk2)
+  }else if(shape2=='decreasing'){
+    psi2=-abs(beta.hat[2])*(z2.obs-zk2)
+  }
+  
   #cycling picm & Newton Raphson algorithm
   psi2.full=BTFft(m2, n, int2, z2, psi2)
   iter=0;  dist=1;
@@ -83,13 +90,13 @@ aisoph.ti=function(TIME, STATUS, Z1, Z2, W, shape, K1, K2, maxdec, maxiter, eps)
     if(iter>maxiter) break    
     
     #estimate psi1
-    picm1=cpicm.ft(psi1,psi2.full,z1,m1,k1,n,int1,Y1,dN1, w1,beta ,eps,maxiter, shape)
+    picm1=cpicm.ft(psi1,psi2.full,z1,m1,k1,n,int1,Y1,dN1, w1,beta ,eps,maxiter, shape1)
     if(picm1$conv==0) stop
     psi1.new=picm1$psi.new
     psi1.full=BTFft(m1, n, int1, z1, psi1.new)
 
     #estimate psi2;
-    picm2=cpicm.ft(psi2,psi1.full,z2,m2,k2,n,int2,Y2,dN2, w2,beta ,eps,maxiter, shape)
+    picm2=cpicm.ft(psi2,psi1.full,z2,m2,k2,n,int2,Y2,dN2, w2,beta ,eps,maxiter, shape2)
     if(picm2$conv==0) stop
     psi2.new=picm2$psi.new
     psi2.full=BTFft(m2, n, int2, z2, psi2.new)
@@ -188,6 +195,5 @@ aisoph.ti=function(TIME, STATUS, Z1, Z2, W, shape, K1, K2, maxdec, maxiter, eps)
   return(list(est1=est1, est2=est2,
               psi1=psi1.obs, psi2=psi2.obs, exp.beta=exp.beta, z1=z1.obs, z2=z2.obs,
               z1.range=z1.range, z2.range=z2.range, conv=conv,
-              K1=K1, K2=K2, shape=shape,
-              n=n, nevent=sum(STATUS), njump1=m1, njump2=m2))
+              K1=K1, K2=K2))
 }

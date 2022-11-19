@@ -1,8 +1,8 @@
 Package: aisoph
 Type: Package
 Title: Additive Isotonic Proportional Hazards Model
-Version: 0.1
-Date: 2022-10-29
+Version: 0.2
+Date: 2022-11-19
 Authors@R: 
   c(person(given = "Yunro",
            family = "Chung",
@@ -16,8 +16,8 @@ Imports: Rcpp (>= 0.12.1)
 Depends: R (>= 4.2.0), Iso, survival
 LinkingTo: Rcpp
 NeedsCompilation: yes
-Packaged: 2022-11-03 03:57:49 UTC; roy
+Packaged: 2022-11-19 16:25:13 UTC; roy
 Author: Yunro Chung [aut, cre] (<https://orcid.org/0000-0001-9125-9277>)
 Maintainer: Yunro Chung <yunro.chung@asu.edu>
 Repository: CRAN
-Date/Publication: 2022-11-04 09:10:02 UTC
+Date/Publication: 2022-11-19 19:30:02 UTC

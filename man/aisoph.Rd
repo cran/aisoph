@@ -3,7 +3,7 @@
 \title{Fit Additive Isotonic Proportional Hazards Model}
 \description{Nonparametric estimation of additive isotonic covariate effects for proportional hazards model.}
 \usage{
-  aisoph(time, status, z1, z2, trt, shape, K1, K2, maxdec, maxiter, eps)
+  aisoph(time, status, z1, z2, trt, shape1, shape2, K1, K2, maxdec, maxiter, eps)
 }
 \arguments{
   \item{time}{survival time. It must be greater than 0.}
@@ -11,7 +11,8 @@
   \item{z1}{First covariate.}
   \item{z2}{Second covariate.}
   \item{trt}{Treatment group variable. It must be 0 or 1. This argument is optional.}
-  \item{shape}{Direction for \eqn{ z1 } and \eqn{ z2 }, "increasing" or "decreasing".}
+  \item{shape1}{Direction for \eqn{ z1 }, "increasing" or "decreasing".}
+  \item{shape2}{Direction for \eqn{ z1 }, "increasing" or "decreasing.}
   \item{K1}{anchor constraint for \eqn{ z1 } (default is 0).}
   \item{K2}{anchor constraint for \eqn{ z2 } (default is 0).}
   \item{maxdec}{maximum number of decisimal for output (default is 2).}  
@@ -36,11 +37,6 @@ For the anchor constraint, one point has to be fixed with \eqn{\psi1(K1)=0} to s
 \item{conv}{Algorithm convergence status.}
 \item{K1}{anchor point satisfying \eqn{\psi1(K1)}=0.}
 \item{K2}{anchor point satisfying \eqn{\psi2(K2)}=0.}
-\item{shape}{Order-restriction imposed on \eqn{\psi1} and \eqn{\psi2}.}
-\item{n}{Number of sample sizes.}
-\item{nevent}{Number of events.}
-\item{njump1}{Number of distinct z1 associated with observed events.}
-\item{njump2}{Number of distinct z2 associated with observed events.}
 \item{call}{formulation.}
 }
 
@@ -61,7 +57,7 @@ z1=     c(3, 1, 2, 4, 8, 3, 3, 4, 1, 9, 4, 2, 2, 8, 5)
 z2=     c(1, 3, 5, 6, 1, 7, 6, 8, 3, 4, 8, 8, 5, 2, 3)
 
 # 1.2. Fit isotonic proportional hazards model
-res1 = aisoph(time=time, status=status, z1=z1, z2=z2, shape="increasing")
+res1 = aisoph(time=time, status=status, z1=z1, z2=z2)
 
 # 1.3. print result
 res1
@@ -80,7 +76,7 @@ z2=    c(3,6,9,9,4,3,9,8,4,7,2,3,1,3,7,0,1,6,4,1)
 trt=   c(0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1)
 
 # 2.2. Fit isotonic proportional hazards model
-res2 = aisoph(time=time, status=status, z1=z1, z2=z2, trt=trt, shape="increasing")
+res2 = aisoph(time=time, status=status, z1=z1, z2=z2, trt=trt)
 
 # 2.3. print result
 res2

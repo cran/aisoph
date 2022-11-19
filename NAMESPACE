@@ -3,6 +3,7 @@ useDynLib(aisoph)
 importFrom("graphics", "plot", "points", "legend", "par")
 importFrom("survival", "coxph")
 importFrom("Iso", "pava")
+importFrom("stats", "glm")
 
 export(aisoph, aisoph)
 

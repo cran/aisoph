@@ -4,6 +4,8 @@ plot.aisoph=function(x, lty=1, lcol=1, lwd=1, pch=19, pcol=1, pcex=0.7,
                    ...){
   y1.obs=x$psi1;        y2.obs=x$psi2
   z1.obs=x$z1;          z2.obs=x$z2
+  
+  #range  
   z1.range=x$z1.range;  z2.range=x$z2.range
   hr1.obs=exp(y1.obs);  hr2.obs=exp(y2.obs)
   
