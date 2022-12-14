@@ -7,8 +7,8 @@
 \tabular{ll}{
 Package: \tab aisoph\cr
 Type: \tab Package\cr
-Version: \tab 0.2\cr
-Date: \tab 2022-11-19\cr
+Version: \tab 0.3\cr
+Date: \tab 2022-12-14\cr
 License: \tab GPL (>= 2)\cr
 }
 }

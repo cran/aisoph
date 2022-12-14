@@ -1,13 +1,10 @@
-useDynLib(aisoph)
-
-importFrom("graphics", "plot", "points", "legend", "par")
+importFrom("stats","median","na.omit","aggregate")
+importFrom("graphics", "plot", "par", "points")
 importFrom("survival", "coxph")
+importFrom("isoSurv", "isoph")
 importFrom("Iso", "pava")
-importFrom("stats", "glm")
 
 export(aisoph, aisoph)
 
-S3method(print, aisoph, print.aisoph)
 S3method(plot, aisoph, plot.aisoph)
 
-importFrom(Rcpp, evalCpp)

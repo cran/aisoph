@@ -1,23 +1,32 @@
-aisoph=function(time, status, z1, z2, trt=NULL, shape1="increasing", shape2="increasing", K1=0, K2=0, maxdec=2, maxiter=10^5, eps=10^-3){
+aisoph=function(time, status, z1, z2, w=NULL, shape="increasing", K1="null", K2="null", maxiter=10^5, eps=10^-3){
   
-
-  if(any(grep("inc",tolower(shape1)))==TRUE){
-    shape1="increasing"
-  }else if(any(grep("dec",tolower(shape1)))==TRUE){
-    shape1="decreasing"
+  if(any(grep("inc",tolower(shape)))==TRUE){
+    shape1=shape2="increasing"
+  }else if(any(grep("dec",tolower(shape)))==TRUE){
+    shape1=shape2="decreasing"
   }
   
-  if(any(grep("inc",tolower(shape2)))==TRUE){
-    shape2="increasing"
-  }else if(any(grep("dec",tolower(shape2)))==TRUE){
-    shape2="decreasing"
+  if(is.null(w)){
+    Q=0
+    df.full=data.frame(time=time,status=status,z1=z1,z2=z2)
+  }else{
+    df.full=data.frame(time=time,status=status,z1=z1,z2=z2,w=w)
+    if(is.vector(w)){
+      Q=1
+    }else{
+      Q=ncol(w)
+    }
   }
+  df.full=na.omit(df.full) #complete case analysis
   
-  #4. isoph
-  est=aisoph.ti(TIME=time, STATUS=status, Z1=z1, Z2=z2, W=trt, shape1=shape1, shape2=shape2, K1=K1, K2=K2, maxdec=maxdec, maxiter=maxiter, eps=eps)
-    
-  est$call=match.call()
-  class(est)="aisoph"
+  if(is.null(K1))
+    K1=median(df.full$z1)
   
-  est
+  if(is.null(K2))
+    K2=median(df.full$z2)
+  
+  #4. aisoph
+  res=aisoph.ti(df.full=df.full, Q=Q, shape1=shape1, shape2=shape2, K1=K1, K2=K2, maxiter=maxiter, eps=eps)
+  class(res)="aisoph"
+  return(res)
 }
