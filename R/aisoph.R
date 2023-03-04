@@ -1,20 +1,26 @@
-aisoph=function(time, status, z1, z2, w=NULL, shape="increasing", K1="null", K2="null", maxiter=10^5, eps=10^-3){
+aisoph=function(time, status, z1, z2, x=NULL, shape1="increasing", shape2="increasing", K1=NULL, K2=NULL, maxiter=10^5, eps=10^-3){
   
-  if(any(grep("inc",tolower(shape)))==TRUE){
-    shape1=shape2="increasing"
-  }else if(any(grep("dec",tolower(shape)))==TRUE){
-    shape1=shape2="decreasing"
+  if(any(grep("inc",tolower(shape1)))==TRUE){
+    shape1="increasing"
+  }else if(any(grep("dec",tolower(shape1)))==TRUE){
+    shape1="decreasing"
   }
   
-  if(is.null(w)){
+  if(any(grep("inc",tolower(shape2)))==TRUE){
+    shape2="increasing"
+  }else if(any(grep("dec",tolower(shape2)))==TRUE){
+    shape2="decreasing"
+  }
+  
+  if(is.null(x)){
     Q=0
     df.full=data.frame(time=time,status=status,z1=z1,z2=z2)
   }else{
-    df.full=data.frame(time=time,status=status,z1=z1,z2=z2,w=w)
-    if(is.vector(w)){
+    df.full=data.frame(time=time,status=status,z1=z1,z2=z2,x=x)
+    if(is.vector(x)){
       Q=1
     }else{
-      Q=ncol(w)
+      Q=ncol(x)
     }
   }
   df.full=na.omit(df.full) #complete case analysis

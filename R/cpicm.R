@@ -1,12 +1,13 @@
-cpicm.ft=function(psi1,psi2.full, z1,z1.obs,m1,k1,n1,Y1,dN1,nt1, w1,beta, eps,maxiter, shape1){
+cpicm.ft=function(psi1,psi2.full1,z1,z1.obs,m1,k1,n,Y1,dN1,nt, x1,beta, eps,maxiter, shape1){
   #Yest1
-  w1b=w1%*%beta
-  exp.psi2.w1b=exp(psi2.full+w1b)
-  Yest1=matrix(NA,n1,nt1)
-  for(j in 1:nt1)
-    Yest1[,j]=Y1[,j]*exp.psi2.w1b
-  Y1.new=matrix(0,m1,nt1)
-  dN1.new=matrix(0,m1,nt1)
+  x1b=x1%*%beta
+  exp.psi2.x1b=exp(psi2.full1+x1b) 
+  Yest1=matrix(NA,n,nt)
+  for(j in 1:nt)
+    Yest1[,j]=Y1[,j]*exp.psi2.x1b
+  
+  Y1.new=matrix(0,m1,nt)
+  dN1.new=matrix(0,m1,nt)
   
   if(shape1=="increasing"){
     intv1=c(z1.obs,Inf) #right continuous
@@ -49,12 +50,13 @@ cpicm.ft=function(psi1,psi2.full, z1,z1.obs,m1,k1,n1,Y1,dN1,nt1, w1,beta, eps,ma
     den=colSums(Y1.new*exp(psi1))
     index.zero=which(den>0) #0/0=0
     
-    weight=c()
+    weight=rep(NA,m1)
     for(s in 1:m1)
       weight[s]=sum( (Y1.new[s,]*dNsum/den)[index.zero] )
     
-    if(sum(is.na(weight))+sum(is.infinite(weight))>=1)
-      break;
+    if((sum(is.na(weight))+sum(is.infinite(weight))+sum(is.infinite(1/weight)))>=1)
+      return(rep(NA,m1))
+    
     
     if(shape1=='increasing'){
       exp.psi1.new=pava((Delta/weight), weight)
@@ -65,14 +67,16 @@ cpicm.ft=function(psi1,psi2.full, z1,z1.obs,m1,k1,n1,Y1,dN1,nt1, w1,beta, eps,ma
     
     #distance
     d.e=sum(abs(exp(psi1.new)-exp(psi1)))
+    if(is.infinite(d.e) | is.na(d.e))
+      return(rep(NA,m1))
     psi1=psi1.new
   }
   
   #impose the anchor
-  psi1.new=psi1.new-psi1.new[k1] #psi is the same as psi.new;
+  psi1=psi1-psi1[k1] #psi is the same as psi.new;
   
-  conv=0
-  if(d.e<eps) conv=1 
-  
-  return(psi1.new)
+  if(d.e>eps)
+    return(rep(NA,m1))
+
+  return(psi1)
 }
